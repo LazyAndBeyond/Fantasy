@@ -1,0 +1,5 @@
+2017/12/04-17:56:47.680 c8c Recovering log #93
+2017/12/04-17:56:47.680 c8c Level-0 table #96: started
+2017/12/04-17:56:47.727 c8c Level-0 table #96: 445 bytes OK
+2017/12/04-17:56:47.774 c8c Delete type=0 #93
+2017/12/04-17:56:47.789 c8c Delete type=3 #91

@@ -1,0 +1,27 @@
+{
+  "name": "beta-bot",
+  "version": "0.0.1",
+  "description": "a beta bot",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "beta-bot"
+  ],
+  "author": "AyoußMadrid",
+  "license": "MIT",
+  "dependencies": {
+    "canvas-constructor": "^0.3.0",
+    "cleverbot-node": "^0.3.11",
+    "discord.js": "^11.2.1",
+    "discord.js-music-v11": "^1.3.4",
+    "enmap": "^0.4.2",
+    "enmap-level": "^1.0.0",
+    "moment": "^2.19.3",
+    "moment-duration-format": "^1.3.0",
+    "ms": "^2.1.1",
+    "neko.js": "^1.9.4",
+    "random-puppy": "^1.1.0"
+  }
+}

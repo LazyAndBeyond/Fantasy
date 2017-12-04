@@ -1,0 +1,30 @@
+app.js:
+This is the file where you will do your processing
+
+Features of this OS:
+You do not need to code an event handler, but you will need to code a command handler.
+
+Varibles for OS:
+
+Bot
+Bot.config
+Bot.config.token
+Bot.version
+Bot.commands
+Bot.client
+
+Structure for events
+
+message.js
+ready.js
+
+module.exports = async (Bot) => {
+//code here
+}
+
+Structure for commands
+
+This will all depend on the command handler you use.
+
+
+
