@@ -1,4 +1,4 @@
-exports.run = async (beta, message, args, level) => {
+exports.run = (beta, message, args, level) => {
   function getRandomHex () {
     return '#' + Math.floor(Math.random() * 16777215).toString(16)
   }
@@ -9,10 +9,10 @@ exports.run = async (beta, message, args, level) => {
 
   if (message.channel.nsfw) {
 
-    randomPuppy('hentai')
+    randomPuppy('NSFWGIFS')
       .then(url => {
         const embed = new Discord.RichEmbed()
-              .setTitle(`HENTAI!!!`)
+              .setTitle(`NSFW!!!`)
               .setImage(url)
               .setColor(getRandomHex())
         return message.channel.send({ embed })
@@ -30,8 +30,8 @@ exports.conf = {
 }
 
 exports.help = {
-  name: 'hentai',
+  name: 'nsfw',
   category: 'Fun & NSWF',
-  description: 'Hentai pics for lewd people.',
-  usage: 'hentai'
+  description: 'nsfw pics/gifs for lewd people.',
+  usage: 'nsfw'
 }

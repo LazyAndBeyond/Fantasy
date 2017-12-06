@@ -7,7 +7,7 @@ exports.run = (beta, message, args, level) => {
   const nekoclient = new neko.Client()
 
   if (message.channel.nsfw) {
-    nekoclient.lizard().then((LewdNeko) => message.channel.send({
+    nekoclient.lizard().then((lizard) => message.channel.send({
       embed: {
           color: getRandomInt(),
           image: {
@@ -29,8 +29,8 @@ exports.conf = {
 }
 
 exports.help = {
-  name: 'lewd',
-  category: 'Fun & NSWF',
-  description: 'random lewd neko pic.',
-  usage: 'lewd'
+  name: 'lizard',
+  category: 'Fun',
+  description: 'random lizards pic.',
+  usage: 'lizard'
 }

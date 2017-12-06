@@ -4,6 +4,14 @@ module.exports = (beta, message) => {
       : beta.config.defaultSettings
 
   message.settings = settings
+  
+      if (settings.swearDitector !== 'true') return
+
+  const swearWords = ['fuck', 'shit', 'Shit ', 'SHIT', 'FUCK', 'dick', 'pussy', 'fuck off', 'fuck you', 'fucking', 'cunt', 'faggot', 'ass', 'asshole']
+  if (swearWords.some(word => message.content.includes(word))) {
+    message.reply('Oh no you said a bad word!!!')
+    message.delete()
+  }
 
   if (message.content.indexOf(settings.prefix) !== 0) return
   const args = message.content.slice(settings.prefix.length).trim().split(/ +/g)
