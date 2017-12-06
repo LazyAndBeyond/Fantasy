@@ -25,7 +25,7 @@ module.exports = (beta, message) => {
   message.author.permLevel = level
 
   message.flags = []
-  while (args[0] && args[0][0] === 'b!') {
+  while (args[0] && args[0][0] === '$$') {
     message.flags.push(args.shift().slice(1))
   }
   cmd.run(beta, message, args, level)

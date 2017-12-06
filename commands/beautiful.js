@@ -20,14 +20,8 @@ exports.run = async (beta, message, args, level) => {
         .toBuffer()
   }
 
-  const beautiful = await this.verifyUser(args[0] ? args[0] : message.author.id)
-  const msg = await message.channel.send('Admiring the painting...')
-  const result = await getBeautiful(beautiful.displayAvatarURL)
-  await message.channel.send({ files: [{ attachment: result, name: 'beautiful.jpg' }] })
-  await msg.delete()
-
   try {
-    const beautiful = await this.verifyUser(args[0] ? args[0] : message.author.id)
+    const beautiful = message.mentions.users.first()
     const msg = await message.channel.send('Admiring the painting...')
     const result = await getBeautiful(beautiful.displayAvatarURL)
     await message.channel.send({ files: [{ attachment: result, name: 'beautiful.jpg' }] }).then(file => console.log(file))

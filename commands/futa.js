@@ -6,17 +6,15 @@ exports.run = async (beta, message, args, level) => {
   const Discord = require('discord.js')
   const randomPuppy = require('random-puppy')
 
-
   if (message.channel.nsfw) {
-
-    randomPuppy()
-      .then(url => {
-        const embed = new Discord.RichEmbed()
-              .setTitle(`${random}`)
-              .setImage(url)
-              .setColor(getRandomHex())
-        return message.channel.send({ embed })
-      })
+    randomPuppy('Futanari')
+        .then(url => {
+          const embed = new Discord.RichEmbed()
+                .setTitle(`Lewd Futanaris!!`)
+                .setImage(url)
+                .setColor(getRandomHex())
+          return message.channel.send({ embed })
+        })
   } else {
     message.channel.send('Sorry but this is only for nsfw channels.')
   }
@@ -25,13 +23,13 @@ exports.run = async (beta, message, args, level) => {
 exports.conf = {
   enabled: true,
   guildOnly: true,
-  aliases: [],
+  aliases: ['Futa', 'Futanari', 'futanari'],
   permLevel: 'User'
 }
 
 exports.help = {
-  name: 'hentai',
+  name: 'futa',
   category: 'Fun & NSWF',
-  description: 'Hentai pics for lewd people.',
-  usage: 'hentai'
+  description: 'Futanari pics for lewd people.',
+  usage: 'futa'
 }
