@@ -1,17 +1,19 @@
 const config = {
   'ownerID': '240458124522160128',
   'admins': [],
-  'token': '',
+  'token': 'Mzg2NTg0NjQ3NTQ4NTM0Nzg1.DQgP4w.QcKw1SkwNU8jRwyWUimYAAal-yU',
   'support': [],
   'defaultSettings': {
-    'prefix': '$$',
+    'prefix': 'b!',
     'modLogChannel': 'mod-log',
     'systemNotice': 'true',
     'swearDitector': 'false',
     'welcomeChannel': 'welcome',
     'welcomeMessage': 'Look its a bird!... No its a plan... NO ITS {{user}}!!!!',
     'leaveMessage': 'Oh no {{user}} just left us...',
-    'welcomeEnabled': 'false'
+    'welcomeEnabled': 'false',
+    'afk': false,
+    'afkMessage': 'is currently AFK, they will be back soon.'
   },
 
   permLevels: [

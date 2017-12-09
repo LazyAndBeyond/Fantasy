@@ -4,6 +4,15 @@ module.exports = (beta, message) => {
       : beta.config.defaultSettings
 
   message.settings = settings
+  
+    const swearWords = ['fuck', 'shit', 'Shit ', 'SHIT', 'FUCK', 'dick', 'pussy', 'PUSSY', 'Pussy', 'fuck off', 'fuck you', 'fucking', 'cunt', 'faggot', 'ass', 'asshole', 'nigga', 'NIGGA', 'Nigga', 'cock', 'Cock', 'COCK']
+    
+  if (swearWords.some(word => message.content.includes(word))) {
+  if (settings.swearDitector === 'true') {
+    message.reply('Oh no you said a bad word!!!')
+    message.delete()
+  }
+  }
 
   if (message.content.indexOf(settings.prefix) !== 0) return
   const args = message.content.slice(settings.prefix.length).trim().split(/ +/g)
@@ -25,7 +34,7 @@ module.exports = (beta, message) => {
   message.author.permLevel = level
 
   message.flags = []
-  while (args[0] && args[0][0] === 'b!') {
+  while (args[0] && args[0][0] === '$$') {
     message.flags.push(args.shift().slice(1))
   }
   cmd.run(beta, message, args, level)
