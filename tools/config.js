@@ -12,8 +12,12 @@ const config = {
     'welcomeMessage': 'Look its a bird!... No its a plan... NO ITS {{user}}!!!!',
     'leaveMessage': 'Oh no {{user}} just left us...',
     'welcomeEnabled': 'false',
+  },
+  
+  'botSettings' : {
     'afk': false,
-    'afkMessage': 'is currently AFK, they will be back soon.'
+    'afkMessage': 'is currently AFK, they will be back soon.',
+    'botSupport': '283893701023891466'
   },
 
   permLevels: [
