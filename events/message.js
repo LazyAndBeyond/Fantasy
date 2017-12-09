@@ -5,12 +5,13 @@ module.exports = (beta, message) => {
 
   message.settings = settings
   
-      if (settings.swearDitector !== 'true') return
-
-  const swearWords = ['fuck', 'shit', 'Shit ', 'SHIT', 'FUCK', 'dick', 'pussy', 'fuck off', 'fuck you', 'fucking', 'cunt', 'faggot', 'ass', 'asshole']
+    const swearWords = ['fuck', 'shit', 'Shit ', 'SHIT', 'FUCK', 'dick', 'pussy', 'PUSSY', 'Pussy', 'fuck off', 'fuck you', 'fucking', 'cunt', 'faggot', 'ass', 'asshole', 'nigga', 'NIGGA', 'Nigga', 'cock', 'Cock', 'COCK']
+    
   if (swearWords.some(word => message.content.includes(word))) {
+  if (settings.swearDitector === 'true') {
     message.reply('Oh no you said a bad word!!!')
     message.delete()
+  }
   }
 
   if (message.content.indexOf(settings.prefix) !== 0) return
