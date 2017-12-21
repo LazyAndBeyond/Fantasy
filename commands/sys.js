@@ -28,5 +28,5 @@ exports.help = {
   name: 'sys',
   category: 'Costum',
   description: 'Gives some useful bot statistics',
-  usage: 'stats'
+  usage: 'sys'
 }

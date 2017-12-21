@@ -12,7 +12,7 @@ exports.run = async (beta, message, args, level) => {
 
   try {
     const embed = new Discord.RichEmbed()
-        .setTitle('Somone Wanted Something Funny')
+        .setTitle('Somone Wanted Something Funny...')
         .setDescription(joke.body.joke)
         .setColor(getRandomHex())
     return message.channel.send({ embed })

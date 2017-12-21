@@ -13,7 +13,7 @@ module.exports = (beta, message) => {
     message.delete()
   }
   }
-
+  
   if (message.content.indexOf(settings.prefix) !== 0) return
   const args = message.content.slice(settings.prefix.length).trim().split(/ +/g)
   const command = args.shift().toLowerCase()

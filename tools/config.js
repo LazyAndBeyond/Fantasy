@@ -1,10 +1,10 @@
 const config = {
   'ownerID': '240458124522160128',
   'admins': [],
-  'token': 'token',
+  'token': 'Mzg2NTg0NjQ3NTQ4NTM0Nzg1.DQgP4w.QcKw1SkwNU8jRwyWUimYAAal-yU',
   'support': [],
   'defaultSettings': {
-    'prefix': 'b!',
+    'prefix': '$$',
     'modLogChannel': 'mod-log',
     'systemNotice': 'true',
     'swearDitector': 'false',
