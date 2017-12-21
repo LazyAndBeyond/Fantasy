@@ -1,11 +1,20 @@
 
 const Discord = require('discord.js')
-
+const http = require('http')
+const express = require('express')
+const app = express()
 const { promisify } = require('util')
 const readdir = promisify(require('fs').readdir)
 const Enmap = require('enmap')
 const EnmapLevel = require('enmap-level')
 const beta = new Discord.Client()
+app.get('/', (request, response) => {
+  response.sendStatus(200)
+})
+app.listen(process.env.PORT)
+setInterval(() => {
+  http.get(`http://${process.env.PROJECT_DOMAIN}.glitch.me/`)
+}, 280000)
 
 beta.config = require('./tools/config.js')
 require('./modules/functions.js')(beta)

@@ -1,10 +1,7 @@
 exports.run = async (beta, message, args, level) => {
-  function getRandomHex () {
-    return '#' + Math.floor(Math.random() * 16777215).toString(16)
-  }
   const Discord = require('discord.js')
   const snekfetch = require('snekfetch')
-  const { query } = message.content.split(/\s+/g).slice(1).join(' ')
+  const query  = message.content.split(/\s+/g).slice(1).join(' ')
   const { body } = await snekfetch
         .get('https://store.steampowered.com/api/storesearch')
         .query({
@@ -14,18 +11,16 @@ exports.run = async (beta, message, args, level) => {
         })
   if (!body.total) return message.channel.send(`No results found for **${query}**!`)
 
-  console.log(body.items[0])
-
   const current = body.items[0].price ? body.items[0].price.final / 100 : 0.00
   const original = body.items[0].price ? body.items[0].price.initial / 100 : 0.00
   const price = current === original ? `$${current}` : `~~$${original}~~ $${current}`
 
   const embed = new Discord.RichEmbed()
-        .setColor(getRandomHex())
+        .setColor(beta.getRandomHex())
         .setAuthor(body.items[0].name, 'https://i.imgur.com/vL8b4D5.png')
         .setURL(`http://store.steampowered.com/app/${body.items[0].id}`)
         .setImage(body.items[0].tiny_image)
-        .setDescription(`•**Price:** ${price} **score:** ${body.items[0].metascore || '`N/A`'}`)
+        .setDescription(`• **Price:** ${price} **score:** ${body.items[0].metascore || '`N/A`'}`)
   return message.channel.send({ embed })
 }
 
@@ -39,6 +34,6 @@ exports.conf = {
 exports.help = {
   name: 'steam',
   category: 'Fun',
-  description: 'search for your favoret steam games here',
+  description: 'search for your favoret steam games here (OUT DATTED!)',
   usage: 'steam <game name>'
 }

@@ -29,7 +29,7 @@ exports.run = async (beta, message, args, level) => {
   .setThumbnail(icon)
   .addField('Guild Infos:', `• Guild Name: **${guild}**\n• Guild ID: **${guildID}**\n• Guild Owner: **${owner}**\n• Guild VerificationLevel: **${verifications[message.guild.verificationLevel]}**\n • Guild Region: **${region}**\n Guild CreatedAt: **${createdAT}**\n • Guild IsLarge: **${message.guild.large}**`)
   .addField('Channels Infos:', ` • Guild TextsChannels Size: **${textChannels}**\n • Guild VoiceChannels Size: **${voiceChannels}**`, true)
-  .addField('Members Infos:', ` • Guild MembersCount **${users}**\n • Guild BotsCount: **${bots}**\n • Online Members: **${online}**\n • Offline Members: **${offline}**\n • Idle Members: **${idle}**\n • Dnd Members: **${dnd}**`)
+  .addField('Members Infos:', ` • Guild MembersCount **${users}**\n • Guild BotsCount: **${bots}**\n • Online Members : **${online}**\n • Offline Members: **${offline}**\n • Idle Members: **${idle}**\n • Dnd Members: **${dnd}**`)
   .addField('Roles Infos:', `• Guild Roles Size: **${Roles}** `)
   beta.channels.get('387303106540601346').send(embed)
   message.channel.send('Successfully Bumped the server!!')
