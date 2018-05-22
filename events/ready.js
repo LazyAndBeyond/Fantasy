@@ -10,6 +10,7 @@ module.exports = async beta => {
   LET'S GO!
   ------------------------------------------------------`
   await beta.wait(1000)
+  beta.user.setActivity('$$help')
   console.log(msg)
   beta.guilds.filter(g => !beta.settings.has(g.id)).forEach(g => beta.settings.set(g.id, beta.config.defaultSettings))
 }

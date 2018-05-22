@@ -33,7 +33,7 @@ exports.conf = {
 
 exports.help = {
   name: 'steam',
-  category: 'Fun',
+  category: 'Costum',
   description: 'search for your favoret steam games here (OUT DATTED!)',
   usage: 'steam <game name>'
 }

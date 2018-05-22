@@ -2,7 +2,8 @@ module.exports = (beta, message) => {
   const settings = message.guild
       ? beta.settings.get(message.guild.id)
       : beta.config.defaultSettings
-
+  if (message.author.bot) return
+  
   message.settings = settings
   
     const swearWords = ['fuck', 'shit', 'Shit ', 'SHIT', 'FUCK', 'dick', 'pussy', 'PUSSY', 'Pussy', 'fuck off', 'fuck you', 'fucking', 'cunt', 'faggot', 'ass', 'asshole', 'nigga', 'NIGGA', 'Nigga', 'cock', 'Cock', 'COCK']
@@ -13,6 +14,21 @@ module.exports = (beta, message) => {
     message.delete()
   }
   }
+  const afk = require('../data/afk.json')
+  afk.map(user => {
+    if (message.isMemberMentioned(beta.users.get(user))) {
+       message.reply('The user is currenly AFK, he\'ll be back soon.')
+    }
+  })
+
+  const sbl = require('../data/blservers.json')
+  const ubl = require('../data/blusers.json')
+    if (sbl.indexOf(message.guild.id) !== -1 && message.content.startsWith(settings.prefix)) {
+      return
+    }
+    if (ubl.indexOf(message.author.id) !== -1 && message.content.startsWith(settings.prefix)) {
+      return
+    }
   
   if (message.content.indexOf(settings.prefix) !== 0) return
   const args = message.content.slice(settings.prefix.length).trim().split(/ +/g)
@@ -25,8 +41,8 @@ module.exports = (beta, message) => {
   if (level < beta.levelCache[cmd.conf.permLevel]) {
     if (settings.systemNotice === 'true') {
       return message.channel.send(`You do not have permission to use this command.
-    Your permission level is ${level} (${beta.config.permLevels.find(l => l.level === level).name})
-    This command requires level ${beta.levelCache[cmd.conf.permLevel]} (${cmd.conf.permLevel})`)
+    Your permission level is **${level}** (**${beta.config.permLevels.find(l => l.level === level).name}**)
+    This command requires level **${beta.levelCache[cmd.conf.permLevel]}** (**${cmd.conf.permLevel}**)`)
     } else {
       return
     }

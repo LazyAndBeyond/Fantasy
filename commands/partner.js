@@ -1,5 +1,5 @@
 exports.run = async (beta, message, args, level) => {
-  message.author.send('Ok... can you give send me your server ID?').then(channel => beta.channels.get(channel).awaitMessages({ max: 1, time: 15000, errors: ['time'] })).then((guild0) => {
+  message.author.send('Ok... can you give send me your server ID?').then(channel => beta.channels.get(channel).awaitMessage({ max: 1, time: 15000, errors: ['time'] })).then((guild0) => {
     const guild = beta.guilds.get(guild0)
     if (!guild.guild) return message.author.send(`Sorry but it doesn't seems that the ID you gived me is for a server`)
     const Discord = require('discord.js')
@@ -35,8 +35,8 @@ exports.run = async (beta, message, args, level) => {
   })
 }
 
-exports.conf = {
-  enabled: true,
+ exports.conf = {
+  enabled: false,
   guildOnly: false,
   aliases: [],
   permLevel: 'User'

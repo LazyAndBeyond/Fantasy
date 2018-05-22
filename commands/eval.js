@@ -17,7 +17,7 @@ exports.conf = {
 
 exports.help = {
   name: 'eval',
-  category: 'Owner/Admins',
+  category: 'Owner/Admin',
   description: 'Evaluates JavaScript code and executes it.',
   usage: 'eval <code>'
 }

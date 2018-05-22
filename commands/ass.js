@@ -7,15 +7,13 @@ exports.run = async (beta, message, args, level) => {
     const Discord = require('discord.js')
     const snekfetch = require('snekfetch')
 
-    const id = [Math.floor(Math.random() * 10930)]
-    const r = await snekfetch.get(`http://api.oboobs.ru/boobs/${id}`)
+    const id = [Math.floor(Math.random() * 5000)]
+    const r = await snekfetch.get(`http://api.obutts.ru/butts_preview/${id}`)
     const preview = r.body[0]['PREVIEW'.toLowerCase()]
-    console.log(r)
-    const image = `http://media.oboobs.ru/${preview}`
-
+    const image = `http://media.obutts.ru/${preview}`
     const embed = new Discord.RichEmbed()
-        .setTitle('BOOBS!!!')
-        .setFooter('http://oboobs.ru/')
+        .setTitle('ASS!!!')
+        .setFooter('http://obutts.ru/')
         .setImage(image)
         .setColor(getRandomHex())
     return message.channel.send({ embed })
@@ -32,8 +30,8 @@ exports.conf = {
 }
 
 exports.help = {
-  name: 'boobs',
+  name: 'ass',
   category: 'Fun & NSWF',
-  description: 'Boobs pics for lewd people.',
-  usage: 'boobs'
+  description: 'ass pics for lewd people.',
+  usage: 'ass'
 }

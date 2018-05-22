@@ -1,49 +1,33 @@
-exports.run = (beta, message, args, level) => {
-    const settings = this.client.botSettings.get('bot')
-    try {
-      if (!args[0] && !message.flags.length) message.flags.push('status');
-      if (!message.flags.length) {
-        throw 'bleh';
-      }
-      switch (message.flags[0]) {
-        case ('on'): {
-          if (settings.afk) throw 'You are already set as AFK.';
-          else {
-            settings['afk'] = true;
-            this.client.user.setStatus('dnd');
-            this.client.botSettings.set('bot', settings);
-            message.channel.send('Set to AFK');
-          }
-          break;
-        }
+exports.run = async (beta, message, [action, key, ...value], level) => {
+  const { inspect } = require('util')
+  const fs = require('fs')
+  const afk = require('../data/afk.json')
+  const settings = beta.settings.get(message.author.id)
+  const keys = 'afk'
+  try {
+    if (action === 'on') {
+      if (!beta.settings.has(message.author.id)) return beta.settings.set(message.author.id, beta.config.userSettings)
+      if (settings.afk === 'ture') return message.reply('You\'r already setted to AFK')
 
-        case ('off'): {
-          if (!settings.afk) throw 'You are not AFK.';
-          else {
-            settings['afk'] = false;
-            this.client.user.setStatus('online');
-            this.client.botSettings.set('bot', settings);
-            message.channel.send('No longer set to AFK');
-          }
-          break;
-        }
+      settings[keys] = 'true'
+      
+      afk.push(message.author.id)
+      fs.writeFile('./data/afk.json', JSON.stringify(afk), function (err) { if (err) { return console.log(err) } })
+      message.reply(`Seccessfully setted AFK to on.`)
+    } else if (action === 'off') {
+      if (!beta.settings.has(message.author)) return beta.settings.set(message.author.id, beta.config.userSettings)
+      if (settings.afk === 'false') return message.reply('You\'r already not setted to AFK')
 
-        case ('edit'): {
-          settings['afkMessage'] = args.join(' ');
-          this.client.botSettings.set('bot', settings);
-          message.channel.send(`AFK message updated \`${args.join(' ')}\``);
-          break;
-        }
-
-        case ('status'): {
-          message.channel.send(`The current status are,\nAFK Status: ${settings.afk}\nAFK Message: ${settings.afkMessage}`);
-          break;
-        }
-      }
-    } catch (error) {
-      throw error;
-    }
+      settings[keys] = 'false'
+      
+      afk.splice(afk.indexOf(message.author.id))
+      fs.writeFile('./data/afk.json', JSON.stringify(afk), function (err) { if (err) { return console.log(err) } })
+      message.reply(`Seccessfully setted AFK to off.`)
+}
+  } catch (error) {
+    throw error
   }
+}
 
 exports.conf = {
   enabled: true,
@@ -55,6 +39,6 @@ exports.conf = {
 exports.help = {
   name: 'afk',
   category: 'Costum',
-  description: 'Set Your statu to afk!!  (not working).',
-  usage: 'afk [ on | off | status | edit <message>]'
+  description: 'Set Your statu to afk!!  (Unstaible).',
+  usage: 'afk [ on | off | get]'
 }

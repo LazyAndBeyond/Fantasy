@@ -18,7 +18,7 @@ exports.run = async (beta, message, args, level) => {
   const voiceChannels = message.guild.channels.filter(c => c.type === 'voice').size
   const Roles = message.guild.roles.size
   const online = message.guild.members.filter(m => m.user.presence.status === 'online').size
-  const offline = message.guild.members.filter(m => m.user.presence.status === 'invisible').size
+  const offline = message.guild.members.filter(m => m.user.presence.status === 'offline').size
   const idle = message.guild.members.filter(m => m.user.presence.status === 'idle').size
   const dnd = message.guild.members.filter(m => m.user.presence.status === 'dnd').size
   const bots = message.guild.members.filter(m => m.user.bot).size

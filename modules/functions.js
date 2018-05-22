@@ -1,12 +1,12 @@
 module.exports = (beta) => {
-  const Discord = require('discord.js')
-  const client = new Discord.Client()
-  const YoutubeDL = require('youtube-dl')
+  const search = require('youtube-search')
   const ytdl = require('ytdl-core')
-  const MAX_QUEUE_SIZE = 20
-  const DEFAULT_VOLUME = 100
-  const ALLOW_ALL_SKIP = true
-  const CHANNEL = false
+  const opts = {
+  part: 'snippet',
+  maxResults: 10,
+  key: 'AIzaSyCz6EUDhluCmZgdUOQLz8r0JZwp3LryOS8'
+}
+  var intent
   const queues = {}
 
   beta.permlevel = message => {
@@ -23,6 +23,21 @@ module.exports = (beta) => {
       }
     }
     return permlvl
+  }
+  
+  beta.pointsMonitor = (beta, message) => {
+    if (message.channel.type !=='text') return
+    const settings = beta.settings.get(message.guild.id)
+    if (message.content.startsWith(settings.prefix)) return
+    if (!beta.points.has(message.author.id)) return beta.settings.set(message.author.id, beta.config.userSettings)
+  const score = beta.points.get(message.author.id)
+  score.points++
+    const curLevel = Math.floor(0.1 * Math.sqrt(score.points))
+    if (score.level < curLevel) {
+      message.reply(`GJ you've just leveled up!! **${curLevel}**!`)
+      score.level = curLevel
+      beta.points.set(message.author.id, score)
+  }
   }
 
   beta.getRandomHex = () => {
@@ -64,61 +79,134 @@ module.exports = (beta) => {
     return member.hasPermission('ADMINISTRATOR')
   }
 
-  beta.canSkip = (member, queue) => {
-    if (ALLOW_ALL_SKIP) return true
-    else if (queue[0].requester === member.id) return true
-    else if (beta.isAdmin(member)) return true
-    else return false
+beta.getQueue = (guild) => {
+  if (!guild) return
+  if (typeof guild === 'object') guild = guild.id
+  if (queues[guild]) return queues[guild]
+  else queues[guild] = []
+  return queues[guild]
+}
+
+  var paused = {}
+
+  beta.play = (msg, queue, song) => {
+    try {
+      if (!msg || !queue) return
+          // if (msg.guild.voiceConnection.channel.members.first() == undefined)
+      if (song) {
+        search(song, opts, function (err, results) {
+          if (err) return msg.channel.send('Video not found please try to use a youtube link instead.')
+          song = (song.includes('https://' || 'http://')) ? song : results[0].link
+          let stream = ytdl(song, {
+            audioonly: true
+          })
+          let test
+          if (queue.length === 0) test = true
+          queue.push({
+            'title': results[0].title,
+            'requested': msg.author.username,
+            'toplay': stream
+          })
+          console.log('Queued ' + queue[queue.length - 1].title + ' in ' + msg.guild.name + ' as requested by ' + queue[queue.length - 1].requested)
+          msg.channel.send('Queued **' + queue[queue.length - 1].title + '**')
+          if (test) {
+            setTimeout(function () {
+              beta.play(msg, queue)
+            }, 1000)
+          }
+        })
+      } else if (queue.length !== 0) {
+        msg.channel.send(`Now Playing **${queue[0].title}** | Requested by ***${queue[0].requested}***`)
+        console.log(`Playing ${queue[0].title} as requested by ${queue[0].requested} in ${msg.guild.name}`)
+        let connection = msg.guild.voiceConnection
+        if (!connection) return console.log('No Connection!')
+        intent = connection.playStream(queue[0].toplay)
+
+        intent.on('error', () => {
+          queue.shift()
+          beta.play(msg, queue)
+        })
+
+        intent.on('end', () => {
+          queue.shift()
+          beta.play(msg, queue)
+        })
+      } else {
+        msg.channel.send('No more music in queue!')
+      }
+    } catch (err) {
+      console.log(err)
+    }
   }
-
-  beta.getQueue = (server) => {
-    if (!queues[server]) queues[server] = []
-    return queues[server]
-  }
-
-  beta.play = (msg, suffix) => {
-    if (!CHANNEL && msg.member.voiceChannel === undefined) return msg.channel.send(beta.wrap('You\'re not in a voice channel.'))
-
-    if (!suffix) return msg.channel.send(beta.wrap('No video specified!'))
-
-    const queue = beta.getQueue(msg.guild.id)
-
-    if (queue.length >= MAX_QUEUE_SIZE) {
-      return msg.channel.send(beta.wrap('Maximum queue size reached!'))
+  
+  beta.play1 = (message, queue, song) => {
+    const search = require('youtube-search')
+    const ytdl = require('ytdl-core')
+    const opts = {
+      part: 'snippet',
+      maxResults: 10,
+      key: 'AIzaSyCz6EUDhluCmZgdUOQLz8r0JZwp3LryOS8'
     }
 
-    msg.channel.send(beta.wrap('Searching...')).then(response => {
-      var searchstring = suffix
-      if (!suffix.toLowerCase().startsWith('http')) {
-        searchstring = 'gvsearch1:' + suffix
+    let player
+    let test
+
+    try {
+      if (!message || !queue) return
+
+      if (song) {
+        search(song, opts, function (err, results) {
+          if (err) return message.channel.send('Video not found please try to use a youtube link instead.')
+
+          song = (song.includes('https://' || 'http://')) ? song : results[0].link
+
+          let stream = ytdl(song, {
+            audioonly: true
+          })
+
+          if (queue.length === 0) test = true
+          queue.push({
+            'title': results[0].title,
+            'requested': message.author.username,
+            'toplay': stream
+          })
+          message.channel.send('Queued **' + queue[queue.length - 1].title + '**')
+
+          if (test) {
+            setTimeout(function () {
+              beta.play(message, queue)
+            }, 1000)
+          }
+        })
+      } else if (queue.length !== 0) {
+        message.channel.send(`Now Playing **${queue[0].title}** | Requested by ***${queue[0].requested}***`)
+
+        const connection = message.guild.voiceConnection
+        if (!connection) return console.log('No connection!')
+
+        player = connection.playStream(queue[0].toplay)
+
+
+        player.on('error', () => {
+                  queue.shift()
+          message.channel.send('Sorry lads an error occurred while playing this song')
+          beta.play(message, queue)
+        })
+        player.on('end', () => {
+                  queue.shift()
+          beta.play(message, queue)
+        })
       }
-
-      YoutubeDL.getInfo(searchstring, ['-q', '--no-warnings', '--force-ipv4'], (err, info) => {
-        if (err || info.format_id === undefined || info.format_id.startsWith('0')) {
-          return response.edit(beta.wrap('Invalid video!'))
-        }
-
-        info.requester = msg.author.id
-
-        response.edit(beta.wrap('Queued: ' + info.title)).then(() => {
-          queue.push(info)
-          if (queue.length === 1) beta.executeQueue(msg, queue)
-        }).catch(console.log)
-      })
-    }).catch(console.log)
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   beta.skip = (msg, suffix) => {
-    const voiceConnection = client.voiceConnections.find(val => val.channel.guild.id === msg.guild.id)
-    if (voiceConnection === null) return msg.channel.send(wrap('No music being played.'))
+    const voiceConnection = beta.voiceConnections.find(val => val.channel.guild.id === msg.guild.id)
+    if (voiceConnection === null) return msg.reply(beta.wrap('**No music being played.**'))
 
     const queue = beta.getQueue(msg.guild.id)
-
-    if (!beta.canSkip(msg.member, queue)) {
-      return msg.channel.send(beta.wrap('You cannot skip this as you didn\'t queue it.')).then((response) => {
-        response.delete(5000)
-      })
-    }
 
     let toSkip = 1
     if (!isNaN(suffix) && parseInt(suffix) > 0) {
@@ -132,7 +220,7 @@ module.exports = (beta) => {
     if (voiceConnection.paused) dispatcher.resume()
     dispatcher.end()
 
-    msg.channel.send(beta.wrap('Skipped ' + toSkip + '!'))
+    msg.channel.send(beta.wrap('Skipped **' + toSkip + '**!'))
   }
 
   beta.queue = (msg, suffix) => {
@@ -143,146 +231,68 @@ module.exports = (beta) => {
       )).join('\n')
 
     let queueStatus = 'Stopped'
-    const voiceConnection = client.voiceConnections.find(val => val.channel.guild.id === msg.guild.id)
+    const voiceConnection = beta.voiceConnections.find(val => val.channel.guild.id === msg.guild.id)
     if (voiceConnection !== null) {
       const dispatcher = voiceConnection.player.dispatcher
       queueStatus = dispatcher.paused ? 'Paused' : 'Playing'
     }
 
-    msg.channel.send(beta.wrap('Queue (' + queueStatus + '):\n' + text))
+    msg.channel.send(beta.wrap('Queue (**' + queueStatus + '**):\n' + text))
   }
 
   beta.pause = (msg, suffix) => {
-    const voiceConnection = client.voiceConnections.find(val => val.channel.guild.id === msg.guild.id)
-    if (voiceConnection === null) return msg.channel.send(beta.wrap('No music being played.'))
+    const voiceConnection = beta.voiceConnections.find(val => val.channel.guild.id === msg.guild.id)
+    if (voiceConnection === null) return msg.channel.send(beta.wrap('**No music being played.**'))
 
-    if (!beta.isAdmin(msg.member)) { return msg.channel.send(beta.wrap('You are not authorized to use this.')) }
-
-    msg.channel.send(beta.wrap('Playback paused.'))
+    msg.channel.send(beta.wrap('**Playback paused.**'))
     const dispatcher = voiceConnection.player.dispatcher
     if (!dispatcher.paused) dispatcher.pause()
   }
+  
+    beta.resume = (msg, suffix) => {
+    const voiceConnection = beta.voiceConnections.find(val => val.channel.guild.id === msg.guild.id)
+    if (voiceConnection === null) return msg.reply(beta.wrap('**No music being played.**'))
 
-  beta.leave = (msg, suffix) => {
-    if (beta.isAdmin(msg.member)) {
-      const voiceConnection = client.voiceConnections.find(val => val.channel.guild.id === msg.guild.id)
-      if (voiceConnection === null) return msg.channel.send(beta.wrap('I\'m not in any channel!.'))
-      const queue = beta.getQueue(msg.guild.id)
-      queue.splice(0, queue.length)
-      voiceConnection.player.dispatcher.end()
-      voiceConnection.disconnect()
-    } else {
-      msg.channel.send(beta.wrap('You don\'t have permission to use that command!'))
-    }
-  }
-
-  beta.clearqueue = (msg, suffix) => {
-    if (beta.isAdmin(msg.member)) {
-      const queue = beta.getQueue(msg.guild.id)
-
-      queue.splice(0, queue.length)
-      msg.channel.send(beta.wrap('Queue cleared!'))
-    } else {
-      msg.channel.send(beta.wrap('You don\'t have permission to use that command!'))
-    }
-  }
-
-  beta.resume = (msg, suffix) => {
-    const voiceConnection = client.voiceConnections.find(val => val.channel.guild.id === msg.guild.id)
-    if (voiceConnection === null) return msg.channel.send(beta.wrap('No music being played.'))
-
-    if (!beta.isAdmin(msg.member)) { return msg.channel.send(beta.wrap('You are not authorized to use this.')) }
     msg.channel.send(beta.wrap('Playback resumed.'))
     const dispatcher = voiceConnection.player.dispatcher
-    if (dispatcher.paused) dispatcher.resume()
+    if (!dispatcher.paused) {
+      msg.reply('music is already resumed')
+    } else {
+      dispatcher.resume()
+    }
   }
 
   beta.volume = (msg, suffix) => {
-    const voiceConnection = client.voiceConnections.find(val => val.channel.guild.id === msg.guild.id)
-    if (voiceConnection === null) return msg.channel.send(beta.wrap('No music being played.'))
-
-    if (!beta.isAdmin(msg.member)) { return msg.channel.send(beta.wrap('You are not authorized to use this.')) }
+    const voiceConnection = beta.voiceConnections.find(val => val.channel.guild.id === msg.guild.id)
+    if (voiceConnection === null) return msg.reply('**No music being played.**')
 
     const dispatcher = voiceConnection.player.dispatcher
 
     if (suffix > 200 || suffix < 0) {
-      return msg.channel.send(beta.wrap('Volume out of range!')).then((response) => {
+      return msg.reply('**Volume out of range!**').then((response) => {
         response.delete(5000)
       })
     }
 
-    msg.channel.send(beta.wrap('Volume set to ' + suffix))
+    msg.channel.send('Volume set to **' + suffix + '**')
     dispatcher.setVolume((suffix / 100))
   }
-
-  beta.executeQueue = (msg, queue) => {
-    if (queue.length === 0) {
-      msg.channel.send(beta.wrap('Playback finished.'))
-      const voiceConnection = client.voiceConnections.find(val => val.channel.guild.id === msg.guild.id)
-      if (voiceConnection !== null) return voiceConnection.disconnect()
-    }
-
-    new Promise((resolve, reject) => {
-      const voiceConnection = client.voiceConnections.find(val => val.channel.guild.id === msg.guild.id)
-      if (voiceConnection === null) {
-        if (CHANNEL) {
-          msg.guild.channels.find('name', CHANNEL).join().then(connection => {
-            resolve(connection)
-          }).catch((error) => {
-            console.log(error)
-          })
-        } else if (msg.member.voiceChannel) {
-          msg.member.voiceChannel.join().then(connection => {
-            resolve(connection)
-          }).catch((error) => {
-            console.log(error)
-          })
-        } else {
-          queue.splice(0, queue.length)
-          beta.reject()
-        }
-      } else {
-        resolve(voiceConnection)
-      }
-    }).then(connection => {
-      const video = queue[0]
-
-      console.log(video.webpage_url)
-
-      msg.channel.send(beta.wrap('Now Playing: ' + video.title)).then(() => {
-        let dispatcher = connection.playStream(ytdl(video.webpage_url, {filter: 'audioonly'}), {seek: 0, volume: (DEFAULT_VOLUME / 100)})
-
-        connection.on('error', (error) => {
-          console.log(error)
-          queue.shift()
-          beta.executeQueue(msg, queue)
-        })
-
-        dispatcher.on('error', (error) => {
-          console.log(error)
-          queue.shift()
-          beta.executeQueue(msg, queue)
-        })
-
-        dispatcher.on('end', () => {
-          setTimeout(() => {
-            if (queue.length > 0) {
-              queue.shift()
-              beta.executeQueue(msg, queue)
-            }
-          }, 1000)
-        })
-      }).catch((error) => {
-        console.log(error)
-      })
-    }).catch((error) => {
-      console.log(error)
-    })
+  
+  beta.leave = (msg, suffix) => {
+    const voiceConnection = beta.voiceConnections.find(val => val.channel.guild.id === msg.guild.id)
+    if (voiceConnection === null) return msg.reply(beta.wrap('**I\'m not playing!.**'))
+    const queue = beta.getQueue(msg.guild.id)
+    queue.splice(0, queue.length)
+    voiceConnection.player.dispatcher.end()
+    voiceConnection.disconnect()
   }
 
-  beta.wrap = (text) => {
-    return `${ext.replace(/`/g, '`' + String.fromCharCode(8203))}`, {code: 'asciidoc'}
+   beta.clearqueue = (msg, suffix) => {
+    const queue = beta.getQueue(msg.guild.id)
+    queue.splice(0, queue.length)
+    msg.channel.send(beta.wrap('**Queue cleared!**'))
   }
+
 
   beta.loadCommand = (commandName) => {
     try {

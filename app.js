@@ -21,6 +21,10 @@ require('./modules/functions.js')(beta)
 beta.commands = new Enmap()
 beta.aliases = new Enmap()
 beta.settings = new Enmap({provider: new EnmapLevel({name: 'settings'})})
+
+const pointProvider = new EnmapLevel({name: "points"});
+beta.points = new Enmap({provider: pointProvider})
+
 const init = async () => {
   const Files = await readdir('./commands/')
   console.log(`Loading a total of ${Files.length} commands.`)

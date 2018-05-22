@@ -1,6 +1,6 @@
 exports.run = (beta, message, args, level) => {
   const fs = require('fs')
-  const ubl = require('./blusers.json')
+  const ubl = require('../data/blusers.json')
           const c = message.content.split(' ').splice(1).join(' ')
         const ags = c.split(' ')
         console.log('[DEVELOPER DEBUG] Blacklist args were: ' + args)
@@ -10,7 +10,7 @@ exports.run = (beta, message, args, level) => {
           message.channel.send('User have been removed from blacklist.')
         } else if (ags[0] === 'add') {
           ubl.push(ags[1])
-          fs.writeFile('./blusers.json', JSON.stringify(ubl), function (err) { if (err) { return console.log(err) } })
+          fs.writeFile('./data/blusers.json', JSON.stringify(ubl), function (err) { if (err) { return console.log(err) } })
           message.channel.send('User have been added to blacklist.')
         } else {
           message.channel.send(`You need to specify what to do!`)

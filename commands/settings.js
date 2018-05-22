@@ -45,7 +45,7 @@ exports.run = async (beta, message, [action, key, ...value], level) => {
     if (!settings[key]) return message.reply('This key does not exist in the settings')
     message.reply(`The value of **${key}** is currently **${settings[key]}**`)
   } else {
-    message.channel.send(inspect(settings), {code: 'json'})
+    message.channel.send(inspect(settings), {code: 'coffeescript'})
   }
 }
 

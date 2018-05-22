@@ -14,7 +14,7 @@ exports.run = (beta, message, args, level) => {
 • Servers        ::   ${beta.guilds.size.toLocaleString()}
 • Channels       ::   ${beta.channels.size.toLocaleString()}
 • Discord.js     ::   v${version}
-• Node           ::   ${process.version}`, {code: 'asciidoc'})
+• Node           ::   ${process.version}`, {code: 'autohotkey'})
 }
 
 exports.conf = {
