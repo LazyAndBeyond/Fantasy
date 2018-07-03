@@ -1,7 +1,7 @@
 exports.run = (beta, message, args, level) => {
     let suffix = message.content.split(' ').slice(1).join(' ')
     const voiceConnection = beta.voiceConnections.find(val => val.channel.guild.id === message.guild.id)
-    if (voiceConnection === null) return message.reply(beta.wrap('**No music being played.**'))
+    if (voiceConnection === null) return message.reply('**No music being played.**')
 
     const queue = beta.getQueue(message.guild.id)
 

@@ -9,6 +9,7 @@ exports.run = async (beta, message, args, level) => {
 
     const id = [Math.floor(Math.random() * 5000)]
     const r = await snekfetch.get(`http://api.obutts.ru/butts_preview/${id}`)
+    console.log(r.body)
     const preview = r.body[0]['PREVIEW'.toLowerCase()]
     const image = `http://media.obutts.ru/${preview}`
     const embed = new Discord.RichEmbed()

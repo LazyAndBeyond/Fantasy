@@ -1,7 +1,7 @@
 const config = {
   'ownerID': '240458124522160128',
   'admins': [],
-  'token': '
+  'token': 'TOKEN',
   'support': [],
   'defaultSettings': {
     'prefix': '$$',

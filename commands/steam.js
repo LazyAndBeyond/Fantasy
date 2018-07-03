@@ -1,4 +1,5 @@
 exports.run = async (beta, message, args, level) => {
+  try {
   const Discord = require('discord.js')
   const snekfetch = require('snekfetch')
   const query  = message.content.split(/\s+/g).slice(1).join(' ')
@@ -22,6 +23,9 @@ exports.run = async (beta, message, args, level) => {
         .setImage(body.items[0].tiny_image)
         .setDescription(`• **Price:** ${price} **score:** ${body.items[0].metascore || '`N/A`'}`)
   return message.channel.send({ embed })
+  } catch(err) {
+    message.reply('and error accured while tryng to seach the game')
+  }
 }
 
 exports.conf = {

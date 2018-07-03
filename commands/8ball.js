@@ -24,7 +24,7 @@ exports.run = (beta, message, args, level) => {
     'Very doubtful',
     'B-Baka! No!',
     'Yes daddy...',
-    'Is taht iven a question?!',
+    'Is that iven a question?!',
     'Try to ask someone else... IM BUSY!!',
     'Dont ask me ask you mom!!',
     'NOPE!!!',
